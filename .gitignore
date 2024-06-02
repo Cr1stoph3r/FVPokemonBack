@@ -1,0 +1,5 @@
+/vendor/
+/.env
+# Archivos de cache o logs locales que no deberían ser compartidos
+*.log
+.cache

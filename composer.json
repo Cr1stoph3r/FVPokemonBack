@@ -1,0 +1,24 @@
+{
+    "name": "fv/back",
+    "description": "Prueba tecnica firma virtual, backend pokeapi.",
+    "type": "project",
+    "require": {
+        "slim/slim": "^4.13",
+        "illuminate/database": "^11.9",
+        "nyholm/psr7": "^1.8",
+        "http-interop/http-factory-guzzle": "^1.2",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Fv\\Back\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Cr1stoph3r",
+            "email": "cristopherduoc@gmail.com"
+        }
+    ]
+}
