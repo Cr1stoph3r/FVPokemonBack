@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS fv_pokemon_db;
 use fv_pokemon_db;
 
 -- Create tables
--- Table to store colors
+ -- Table to store colors
 CREATE TABLE color (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL
@@ -28,6 +28,7 @@ CREATE TABLE pokemon (
     special_defense INT NOT NULL DEFAULT 0,
     speed INT NOT NULL DEFAULT 0,
     weight int NOT NULL DEFAULT 0,
+    url_img TEXT,
     evolves_from INT,
     evolution_order INT NOT NULL,
     color_id INT null,

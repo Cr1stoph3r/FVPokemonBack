@@ -16,6 +16,8 @@ use Fv\Back\Models\PokemonModel;
 use Fv\Back\Models\PokemonAbilityModel;
 use Fv\Back\Models\PokemonMoveModel;
 use Fv\Back\Models\PokemonTypeModel;
+use Fv\Back\Models\StatsModel;
+
 
 $base_url_pokeapi= 'https://pokeapi.co/api/v2/';
 $context = stream_context_create(['http' => ['timeout' => 20]]);
@@ -536,6 +538,7 @@ function insertPokemon($pokemon, $order, $id_evolves_from = null) {
 
         $id = $pokemon_details["id"];
         $weight = $pokemon_details["weight"];
+        $url_img = $pokemon_details["sprites"]["other"]["official-artwork"]["front_default"] ?? null;
 
         echo "ID: " .$id."\n";
         echo "Name: " .$name."\n";
@@ -552,6 +555,7 @@ function insertPokemon($pokemon, $order, $id_evolves_from = null) {
         $pokemonModel->special_defense = $special_defense;
         $pokemonModel->speed = $speed;
         $pokemonModel->weight = $weight;
+        $pokemonModel->url_img = $url_img;
         $pokemonModel->evolves_from = $evolves_from;
         $pokemonModel->evolution_order = $evolution_order;
         $pokemonModel->color_id = $color_id;
@@ -612,13 +616,24 @@ function handleEvolution($evolution, $id_evolves_from = null, $evolution_order =
     $pokemon_id = 0; // ID del Pokémon que se procesará o se ha procesado
     if ($existingPokemon) {
         echo "The Pokémon with ID: " . $id_pokemon_url . " is already inserted.\n";
-        $pokemon_id = $id_pokemon_url;
+        if($evolution_order == 1){
+            $pokemon_id = $id_pokemon_url;
+        }else{
+            $pokemon_id = $id_evolves_from;
+        }
+        $newPokemonId = $pokemon_id;
     } else {
-        $pokemon_id = insertPokemon($pokemon, $evolution_order, $id_evolves_from);
+        $newPokemonId = insertPokemon($pokemon, $evolution_order, $id_evolves_from);
+        if($evolution_order == 1){
+            $pokemon_id = $newPokemonId;
+        }else{
+            $pokemon_id = $id_evolves_from;
+        };
+
     }
 
     // si pokemon id es 0, necesito que termine de procesar la evolucion y pase al siguiente.
-    if ($pokemon_id == 0) return null;
+    if ($newPokemonId == 0) return null;
 
     // Procesar todas las evoluciones directas
     if (!empty($evolution["evolves_to"])) {
@@ -660,3 +675,41 @@ if(empty($pokemons)) {
 };
 
 processEvolutions($pokemons);
+
+//------------------------------------------------------------------------------------------------------------//
+// Start block.
+//------------------------------------------------------------------------------------------------------------//
+// Function to get the highest value of each stat from all Pokémon and insert them into the stats table
+//------------------------------------------------------------------------------------------------------------//
+function insertMaxStats() {
+    try {
+        $stats = [
+            'hp' => 'HP',
+            'attack' => 'Attack',
+            'defense' => 'Defense',
+            'special_attack' => 'Special Attack',
+            'special_defense' => 'Special Defense',
+            'speed' => 'Speed'
+        ];
+
+        foreach ($stats as $column => $name) {
+            $maxValue = PokemonModel::max($column);
+            StatsModel::updateOrCreate(
+                ['name' => $name],
+                ['max_value' => $maxValue]
+            );
+        }
+
+        echo "Max values inserted into stats table.\n";
+    } catch (\Throwable $th) {
+        echo ''. $th->getMessage() .'';
+        echo " | Error in function: " . __FUNCTION__;
+        echo " | Please try running the script again.";
+        exit();
+    }
+}
+insertMaxStats();
+//------------------------------------------------------------------------------------------------------------//
+// End block
+
+

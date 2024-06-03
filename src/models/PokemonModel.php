@@ -10,7 +10,7 @@ class PokemonModel extends Model
 
     protected $fillable = [
         'id', 'name', 'hp', 'attack', 'defense', 'special_attack', 'special_defense', 'speed',
-        'weight', 'evolves_from', 'evolution_order', 'color_id', 'habitat_id'
+        'weight','url_img', 'evolves_from', 'evolution_order', 'color_id', 'habitat_id'
     ];
 
     public $timestamps = false;
@@ -43,8 +43,7 @@ class PokemonModel extends Model
     public function abilities()
     {
         return $this->belongsToMany(AbilityModel::class, 'pokemon_ability', 'pokemon_id', 'ability_id')
-                    ->withPivot('is_hidden', 'slot')
-                    ->as('details');
+                    ->withPivot('is_hidden', 'slot');
     }
 
     public function moves()
