@@ -1,4 +1,4 @@
---Create and use db
+-- Create and use db
 CREATE DATABASE IF NOT EXISTS fv_pokemon_db;
 use fv_pokemon_db;
 
