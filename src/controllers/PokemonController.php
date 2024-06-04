@@ -97,8 +97,8 @@ class PokemonController
                     'hp' => $pokemon->hp,
                     'attack' => $pokemon->attack,
                     'defense' => $pokemon->defense,
-                    'color' => $pokemon->color ? $pokemon->color->name : null, // Incluir el nombre del color
-                    'types' => $pokemon->types->pluck('name') // Incluir los nombres de los tipos
+                    'color' => $pokemon->color ? $pokemon->color->name : null, 
+                    'types' => $pokemon->types->pluck('name') 
                 ];
             });
     
