@@ -31,6 +31,9 @@ composer install
 php jobs/UpdatePokemonDB.php
 ```
 
+- Este script tardara un poco ya que añade varios datos, pero una vez se comienzan a poblar los pokemon, ya se puede visualizar en front, corriendo el script en una consola y el servidor en otra.
+- Al finalizar el script se finaliza poblando la tabla stats que almacena los puntos mas altos de cada habilidad del pokemon ('HP', 'Ataque', 'Defensa', etc)
+
 ### (En caso de que ocurra algun problema con el script por conexion con la api, volver a ejecutar, el script saltara los que ya se insertaron)
 
 ## Paso 4: Ejecutar servidor
