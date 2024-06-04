@@ -7,83 +7,40 @@
 
 # Pasos
 
-## Paso 1:
+## Paso 1: instalacion
 
 - Clonar el repositorio localmente.
-- Habilitar driver de mysql en la carpeta de instalación de php en el archivo php.ini. Se debe buscar "pdo_mysql" y eliminar ";" y guardar.
+- Habilitar driver de mysql en la carpeta de instalación de php en el archivo php.ini. Se debe buscar "pdo_mysql", eliminar ";" y guardar.
 - Instalar las dependencias:
 
 ```sh
 composer install
 ```
 
-// // Gets the total number of Pokemon.
-// function getTotalPokemons($url) {
-// try {
-// $context = stream_context_create(['http' => ['timeout' => 20]]);
+## Paso 2: Creacion bd y conexion con bd
 
-// $response = file_get_contents($url, false, $context);
+- Iniciamos sesion con usuario en mysql y ejecutamos el script de la raiz del proyecto llamado "schema.sql"
+- Una vez creada la base de datos, a .env.example quitar ".example" y modificar los campos por los datos de las credenciales de su base de datos donde ejecuto el script de creación de la bd.
 
-// $data = json_decode($response, true);
+## Paso 3: Poblar tablas
 
-// // Check if the request was successful
-// if ($data && isset($data['count'])) {
-// return $data['count'];
-// } else {
-// return 0;
-// }
-// } catch (\Throwable $th) {
-// echo $th->getMessage();
-// echo " | Error in function: " . **FUNCTION**;
-// return 0;
-// }
-// }
+- una vez hecho los cambios se debe ejecutar el script 'jobs/UpdatePokemonDB.php'
 
-// //Gets all pokemon.
-// function getPokemonsAPI($url_base = "", $limit = 10) {
-//     try {
-//         $url = "$url_base?limit=$limit";
-//         $context = stream_context_create(['http' => ['timeout' => 20]]);
-//         $response = file_get_contents($url, false, $context);
+```sh
+// en la raiz de proyecto ejecutar
+php jobs/UpdatePokemonDB.php
+```
 
-// if ($response === false) {
-// echo "Failed to retrieve data";
-// return [];
-// }
+### (En caso de que ocurra algun problema con el script por conexion con la api, volver a ejecutar, el script saltara los que ya se insertaron)
 
-// $data = json_decode($response, true);
+## Paso 4: Ejecutar servidor
 
-// return $data['results'] ?? [];
-// } catch (\Throwable $th) {
-// echo $th->getMessage();
-// echo '| Error in function:'. **FUNCTION**;
-// return [];
-// }
-// };
+- Una vez poblada la base de datos se ejecuta el servidor usando:
 
-// function processPokemons($pokemons) {
-//     try {
-//         $context = stream_context_create(['http' => ['timeout' => 20]]);
-//         foreach ($pokemons as $pokemon) {
-//             $evolutionChain = json_decode(file_get_contents($pokemon['url'], false, $context), true);
+```sh
+php -S localhost:8000 -t src
+```
 
-// }
-// } catch (\Throwable $th) {
-// echo $th->getMessage();
-// echo ' | Error in function: '. **FUNCTION**;
-// }
-// }
+# Finalmente, descarga el repositorio del frontend y sigue las instrucciones en su README para conectar con este backend
 
-// $totalPokemons = getTotalPokemons($base_url_pokeapi);
-// if ($totalPokemons == 0) {
-//     // Exit the program if there are no pokemons
-//     echo "No hay pokemones";
-//     exit();
-// }
-// $pokemons = getPokemonsAPI($base_url_pokeapi,$totalPokemons);
-// if (empty($pokemons)) {
-// echo "No se encontraron pokemons";
-// exit();
-// }
-
-// processPokemons($pokemons);
+[Repositorio en GitHub](https://github.com/Cr1stoph3r/FVPokemonFront)

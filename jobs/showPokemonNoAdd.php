@@ -60,12 +60,8 @@ if (empty($unregistered_pokemons)) {
     echo "Todos los Pokémon ya están registrados en la base de datos.\n";
 } else {
     echo "Se encontraron " . count($unregistered_pokemons) . " Pokémon no registrados.\n";
-    // Puedes procesar $unregistered_pokemons según lo necesites
-    // Por ejemplo, mostrando los nombres de los Pokémon no registrados
+
     foreach ($unregistered_pokemons as $unreg_pokemon) {
         echo "ID: " . $unreg_pokemon['id'] . ", Name: " . $unreg_pokemon['name'] . "\n";
     }
 }
-
-// También puedes optar por realizar acciones adicionales con los Pokémon no registrados, como almacenarlos en la base de datos.
-?>

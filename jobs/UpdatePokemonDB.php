@@ -563,8 +563,7 @@ function insertPokemon($pokemon, $order, $id_evolves_from = null) {
 
         if ($pokemonModel->save()) {
             echo "Pokémon insertado exitosamente: ".$name."\n";
-
-            // Insertar tipos del Pokémon
+            // Insert Pokémon types
             foreach ($pokemon_details["types"] as $type) {
                 $type_id = extractIdFromUrl($type["type"]["url"]);
                 PokemonTypeModel::create([
@@ -573,7 +572,7 @@ function insertPokemon($pokemon, $order, $id_evolves_from = null) {
                 ]);
             }
 
-            // Insertar habilidades del Pokémon
+            // Insert pokemon abilities
             foreach ($pokemon_details["abilities"] as $ability) {
                 $ability_id = extractIdFromUrl($ability["ability"]["url"]);
                 PokemonAbilityModel::create([
@@ -584,7 +583,7 @@ function insertPokemon($pokemon, $order, $id_evolves_from = null) {
                 ]);
             }
 
-            // Insertar movimientos del Pokémon
+            // Insert pokemon moves
             foreach ($pokemon_details["moves"] as $move) {
                 $move_id = extractIdFromUrl($move["move"]["url"]);
                 PokemonMoveModel::create([
@@ -605,15 +604,14 @@ function insertPokemon($pokemon, $order, $id_evolves_from = null) {
         exit();
     }
 };
-// Define handleEvolution como una función global
 function handleEvolution($evolution, $id_evolves_from = null, $evolution_order = 1, $context) {
-    if ($evolution === null) return; // Detiene la recursión si no hay evolución
+    if ($evolution === null) return; // Stops the recursion if there is no evolution
 
     $pokemon = $evolution["species"];
     $id_pokemon_url = extractIdFromUrl($pokemon["url"]) ?? null;
     $existingPokemon = PokemonModel::find($id_pokemon_url);
 
-    $pokemon_id = 0; // ID del Pokémon que se procesará o se ha procesado
+    $pokemon_id = 0; 
     if ($existingPokemon) {
         echo "The Pokémon with ID: " . $id_pokemon_url . " is already inserted.\n";
         if($evolution_order == 1){
@@ -632,14 +630,14 @@ function handleEvolution($evolution, $id_evolves_from = null, $evolution_order =
 
     }
 
-    // si pokemon id es 0, necesito que termine de procesar la evolucion y pase al siguiente.
+    // if pokemon id is 0, return null
     if ($newPokemonId == 0) return null;
 
-    // Procesar todas las evoluciones directas
+    // Process the next level of evolution
     if (!empty($evolution["evolves_to"])) {
         foreach ($evolution["evolves_to"] as $nextEvolution) {
-            // El primer nivel de evolución pasa 'null' como evolves_from,
-            // los siguientes niveles pasan el ID de la especie base del nivel actual
+            // The first level of evolution passes 'null' as evolves_from,
+            // the following levels pass the ID of the base species of the current level
             handleEvolution($nextEvolution, $pokemon_id, $evolution_order + 1, $context);
         }
     }
@@ -675,6 +673,12 @@ if(empty($pokemons)) {
 };
 
 processEvolutions($pokemons);
+
+if($cont_new_pokemons == 0) {
+    echo "No se encontraron nuevos pokemons. \n";
+}else{
+    echo "Se insertaron ".$cont_new_pokemons." pokemons en la base de datos.\n";
+}
 
 //------------------------------------------------------------------------------------------------------------//
 // Start block.
